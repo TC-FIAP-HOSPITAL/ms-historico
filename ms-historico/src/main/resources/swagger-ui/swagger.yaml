@@ -1,0 +1,255 @@
+openapi: 3.0.3
+info:
+  title: API de Histórico Médico
+  version: 1.0.0
+  description: API para gerenciar históricos médicos de pacientes.
+
+servers:
+  - url: http://localhost:8080/api
+
+tags:
+  - name: Historicos
+    description: Operações relacionadas aos historicos do paciente
+
+paths:
+  /historicos:
+    get:
+      summary: Lista todos os históricos
+      operationId: listarHistoricos
+      tags:
+        - Historicos
+      responses:
+        '200':
+          description: Lista de históricos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Historico'
+        '500':
+          description: Erro interno no servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      summary: Cria um novo histórico
+      operationId: criarHistorico
+      tags:
+        - Historicos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Historico'
+      responses:
+        '201':
+          description: Histórico criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Historico'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erro interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /historicos/{id}:
+    get:
+      summary: Busca histórico por ID
+      operationId: buscarHistorico
+      tags:
+        - Historicos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/HistoricoId'
+      responses:
+        '200':
+          description: Histórico encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Historico'
+        '404':
+          description: Histórico não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erro interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Atualiza um histórico
+      operationId: atualizarHistorico
+      tags:
+        - Historicos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/HistoricoId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Historico'
+      responses:
+        '200':
+          description: Histórico atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Historico'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Histórico não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erro interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Remove um histórico
+      operationId: removerHistorico
+      tags:
+        - Historicos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/HistoricoId'
+      responses:
+        '204':
+          description: Histórico removido
+        '404':
+          description: Histórico não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erro interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    # Identificadores
+    HistoricoId:
+      type: string
+      example: "H123"
+
+    PacienteId:
+      type: string
+      example: "123456"
+
+    # Campos básicos reutilizáveis
+    NomeHospital:
+      type: string
+      example: "Hospital Municipal"
+
+    NomeMedico:
+      type: string
+      example: "Dr. Carlos Souza"
+
+    Especialidade:
+      type: string
+      example: "Clínico Geral"
+
+    Motivo:
+      type: string
+      example: "Febre e dor de cabeça"
+
+    Diagnostico:
+      type: string
+      example: "Infecção viral"
+
+    Prescricao:
+      type: string
+      example: "Dipirona 500mg a cada 8h por 5 dias"
+
+    Observacoes:
+      type: string
+      example: "Paciente em bom estado geral"
+
+    DataAtendimento:
+      type: string
+      format: date-time
+      example: "2025-09-16T10:30:00"
+
+    # Objeto principal
+    Historico:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/HistoricoId'
+        idPaciente:
+          $ref: '#/components/schemas/PacienteId'
+        data:
+          $ref: '#/components/schemas/DataAtendimento'
+        hospital:
+          $ref: '#/components/schemas/NomeHospital'
+        medico:
+          $ref: '#/components/schemas/NomeMedico'
+        especialidade:
+          $ref: '#/components/schemas/Especialidade'
+        motivo:
+          $ref: '#/components/schemas/Motivo'
+        diagnostico:
+          $ref: '#/components/schemas/Diagnostico'
+        prescricao:
+          $ref: '#/components/schemas/Prescricao'
+        observacoes:
+          $ref: '#/components/schemas/Observacoes'
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-09-16T21:00:00Z"
+        status:
+          type: integer
+          example: 404
+        error:
+          type: string
+          example: "Not Found"
+        message:
+          type: string
+          example: "Histórico não encontrado para o ID informado"
+        path:
+          type: string
+          example: "/historicos/H123"
