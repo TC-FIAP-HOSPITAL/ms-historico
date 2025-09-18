@@ -14,10 +14,19 @@ tags:
 paths:
   /historicos:
     get:
-      summary: Lista todos os históricos
-      operationId: listarHistoricos
+      summary: Buscar lista de históricos
+      operationId: buscarHistoricos
       tags:
         - Historicos
+      parameters:
+        - name: idHistorico
+          in: query
+          schema:
+            $ref: '#/components/schemas/HistoricoId'
+        - in: query
+          name: idPaciente
+          schema:
+            $ref: '#/components/schemas/PacienteId'
       responses:
         '200':
           description: Lista de históricos
@@ -26,7 +35,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Historico'
+                  $ref: '#/components/schemas/HistoricoResponse'
         '500':
           description: Erro interno no servidor
           content:
@@ -43,14 +52,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Historico'
+              $ref: '#/components/schemas/HistoricoRequest'
       responses:
         '201':
           description: Histórico criado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Historico'
+                $ref: '#/components/schemas/HistoricoResponse'
         '400':
           description: Requisição inválida
           content:
@@ -64,44 +73,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /historicos/{id}:
-    get:
-      summary: Busca histórico por ID
-      operationId: buscarHistorico
-      tags:
-        - Historicos
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/HistoricoId'
-      responses:
-        '200':
-          description: Histórico encontrado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Historico'
-        '404':
-          description: Histórico não encontrado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Erro interno
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+  /historicos/{idHistorico}:
     put:
       summary: Atualiza um histórico
       operationId: atualizarHistorico
       tags:
         - Historicos
       parameters:
-        - name: id
+        - name: idHistorico
           in: path
           required: true
           schema:
@@ -111,14 +90,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Historico'
+              $ref: '#/components/schemas/HistoricoAtualizarRequest'
       responses:
         '200':
           description: Histórico atualizado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Historico'
+                $ref: '#/components/schemas/HistoricoResponse'
         '400':
           description: Requisição inválida
           content:
@@ -143,7 +122,7 @@ paths:
       tags:
         - Historicos
       parameters:
-        - name: id
+        - name: idHistorico
           in: path
           required: true
           schema:
@@ -168,12 +147,14 @@ components:
   schemas:
     # Identificadores
     HistoricoId:
-      type: string
-      example: "H123"
+      type: integer
+      format: int64
+      example: 1
 
     PacienteId:
-      type: string
-      example: "123456"
+      type: integer
+      format: int64
+      example: 1
 
     # Campos básicos reutilizáveis
     NomeHospital:
@@ -210,15 +191,55 @@ components:
       example: "2025-09-16T10:30:00"
 
     # Objeto principal
-    Historico:
+    HistoricoRequest:
       type: object
       properties:
-        id:
+        idHistorico:
+          $ref: '#/components/schemas/HistoricoId'
+        idPaciente:
+          $ref: '#/components/schemas/PacienteId'
+        hospital:
+          $ref: '#/components/schemas/NomeHospital'
+        medico:
+          $ref: '#/components/schemas/NomeMedico'
+        especialidade:
+          $ref: '#/components/schemas/Especialidade'
+        motivo:
+          $ref: '#/components/schemas/Motivo'
+        diagnostico:
+          $ref: '#/components/schemas/Diagnostico'
+        prescricao:
+          $ref: '#/components/schemas/Prescricao'
+        observacoes:
+          $ref: '#/components/schemas/Observacoes'
+
+    HistoricoResponse:
+      type: object
+      properties:
+        idHistorico:
           $ref: '#/components/schemas/HistoricoId'
         idPaciente:
           $ref: '#/components/schemas/PacienteId'
         data:
           $ref: '#/components/schemas/DataAtendimento'
+        hospital:
+          $ref: '#/components/schemas/NomeHospital'
+        medico:
+          $ref: '#/components/schemas/NomeMedico'
+        especialidade:
+          $ref: '#/components/schemas/Especialidade'
+        motivo:
+          $ref: '#/components/schemas/Motivo'
+        diagnostico:
+          $ref: '#/components/schemas/Diagnostico'
+        prescricao:
+          $ref: '#/components/schemas/Prescricao'
+        observacoes:
+          $ref: '#/components/schemas/Observacoes'
+
+    HistoricoAtualizarRequest:
+      type: object
+      properties:
         hospital:
           $ref: '#/components/schemas/NomeHospital'
         medico:

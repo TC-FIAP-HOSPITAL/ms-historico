@@ -1,14 +1,14 @@
 package com.ms.historico.domain.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public class HistoricoDomain {
 
-    private String id;
+    private Long idHistorico;
 
-    private String idPaciente;
+    private Long idPaciente;
 
-    private LocalDateTime data;
+    private OffsetDateTime data;
 
     private String hospital;
 
@@ -26,8 +26,8 @@ public class HistoricoDomain {
 
     public HistoricoDomain() {}
 
-    public HistoricoDomain(String id, String idPaciente, LocalDateTime data, String hospital, String medico, String especialidade, String motivo, String diagnostico, String prescricao, String observacoes) {
-        this.id = id;
+    public HistoricoDomain(Long idHistorico, Long idPaciente, OffsetDateTime data, String hospital, String medico, String especialidade, String motivo, String diagnostico, String prescricao, String observacoes) {
+        this.idHistorico = idHistorico;
         this.idPaciente = idPaciente;
         this.data = data;
         this.hospital = hospital;
@@ -39,27 +39,27 @@ public class HistoricoDomain {
         this.observacoes = observacoes;
     }
 
-    public String getId() {
-        return id;
+    public Long getIdHistorico() {
+        return idHistorico;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setIdHistorico(Long idHistorico) {
+        this.idHistorico = idHistorico;
     }
 
-    public String getIdPaciente() {
+    public Long getIdPaciente() {
         return idPaciente;
     }
 
-    public void setIdPaciente(String idPaciente) {
+    public void setIdPaciente(Long idPaciente) {
         this.idPaciente = idPaciente;
     }
 
-    public LocalDateTime getData() {
+    public OffsetDateTime getData() {
         return data;
     }
 
-    public void setData(LocalDateTime data) {
+    public void setData(OffsetDateTime data) {
         this.data = data;
     }
 
