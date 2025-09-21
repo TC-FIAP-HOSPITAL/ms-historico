@@ -39,7 +39,7 @@ public class HistoricoController implements HistoricosApi {
     }
 
     @Override
-    public ResponseEntity<HistoricoResponseDto> _atualizarHistorico(Long idHistorico, HistoricoAtualizarRequestDto historicoDto) {
+    public ResponseEntity<Void> _atualizarHistorico(Long idHistorico, HistoricoAtualizarRequestDto historicoDto) {
         var domain = HistoricoPresenter.toDomain(historicoDto);
         atualizarHistoricoUseCase.atualizar(idHistorico, domain);
         return ResponseEntity.noContent().build();
@@ -53,7 +53,7 @@ public class HistoricoController implements HistoricosApi {
     }
 
     @Override
-    public ResponseEntity<HistoricoResponseDto> _criarHistorico(HistoricoRequestDto historicoDto) {
+    public ResponseEntity<Void> _criarHistorico(HistoricoRequestDto historicoDto) {
          var domain = HistoricoPresenter.toDomain(historicoDto);
          inserirHistoricoUseCase.inserir(domain);
         return ResponseEntity.status(HttpStatus.CREATED).build();

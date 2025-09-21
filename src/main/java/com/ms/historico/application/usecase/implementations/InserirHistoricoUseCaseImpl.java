@@ -21,7 +21,7 @@ public class InserirHistoricoUseCaseImpl implements InserirHistoricoUseCase {
 
     @Override
     public void inserir(HistoricoDomain historicoDomain) {
-        ValidarCamposObrigatoriosRule.validarCampoObrigatorio(historicoDomain.getHospital(), historicoDomain.getMedico(), historicoDomain.getEspecialidade(),
+        ValidarCamposObrigatoriosRule.validarCamposObrigatorios(historicoDomain.getHospital(), historicoDomain.getMedico(), historicoDomain.getEspecialidade(),
                 historicoDomain.getMotivo(), historicoDomain.getDiagnostico(), historicoDomain.getPrescricao(), historicoDomain.getDiagnostico());
 
         historicoDomain.setData(OffsetDateTime.now());
