@@ -194,8 +194,6 @@ components:
     HistoricoRequest:
       type: object
       properties:
-        idHistorico:
-          $ref: '#/components/schemas/HistoricoId'
         idPaciente:
           $ref: '#/components/schemas/PacienteId'
         hospital:

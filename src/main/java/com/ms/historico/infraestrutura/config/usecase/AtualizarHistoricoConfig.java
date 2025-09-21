@@ -2,6 +2,7 @@ package com.ms.historico.infraestrutura.config.usecase;
 
 import com.ms.historico.application.gateways.Historico;
 import com.ms.historico.application.usecase.implementations.AtualizarHistoricoUseCaseImpl;
+import com.ms.historico.domain.domainService.HistoricoDomainService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,7 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class AtualizarHistoricoConfig {
 
     @Bean
-    public AtualizarHistoricoUseCaseImpl atualizarHistoricoUseCase(Historico historico) {
-        return new AtualizarHistoricoUseCaseImpl(historico);
+    public AtualizarHistoricoUseCaseImpl atualizarHistoricoUseCase(Historico historico,
+                                                                   HistoricoDomainService historicoDomainService) {
+        return new AtualizarHistoricoUseCaseImpl(historico, historicoDomainService);
     }
 }
