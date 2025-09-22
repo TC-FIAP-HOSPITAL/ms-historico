@@ -2,7 +2,6 @@ package com.ms.historico.application.usecase.implementations;
 
 import com.ms.historico.application.gateways.Historico;
 import com.ms.historico.application.usecase.InserirHistoricoUseCase;
-import com.ms.historico.domain.domainService.HistoricoDomainService;
 import com.ms.historico.domain.model.HistoricoDomain;
 import com.ms.historico.domain.rules.ValidarCamposObrigatoriosRule;
 
@@ -11,12 +10,9 @@ import java.time.OffsetDateTime;
 public class InserirHistoricoUseCaseImpl implements InserirHistoricoUseCase {
 
     private final Historico historico;
-    private final HistoricoDomainService historicoDomainService;
 
-    public InserirHistoricoUseCaseImpl(Historico historico,
-            HistoricoDomainService historicoDomainService) {
+    public InserirHistoricoUseCaseImpl(Historico historico) {
         this.historico = historico;
-        this.historicoDomainService = historicoDomainService;
     }
 
     @Override
