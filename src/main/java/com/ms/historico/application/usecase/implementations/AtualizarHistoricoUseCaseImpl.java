@@ -18,7 +18,7 @@ public class AtualizarHistoricoUseCaseImpl implements AtualizarHistoricoUseCase 
     }
 
     @Override
-    public void atualizar(Long idHistorico, HistoricoDomain historicoDomain) {
+    public HistoricoDomain atualizar(Long idHistorico, HistoricoDomain historicoDomain) {
         ValidarCamposObrigatoriosRule.validarCamposObrigatorios(historicoDomain.getHospital(), historicoDomain.getMedico(), historicoDomain.getEspecialidade(),
                 historicoDomain.getMotivo(), historicoDomain.getDiagnostico(), historicoDomain.getPrescricao(), historicoDomain.getDiagnostico());
 
@@ -33,5 +33,6 @@ public class AtualizarHistoricoUseCaseImpl implements AtualizarHistoricoUseCase 
         domain.setObservacoes(historicoDomain.getObservacoes());
 
         historico.salvar(domain);
+        return domain;
     }
 }

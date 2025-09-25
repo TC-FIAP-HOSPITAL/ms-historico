@@ -1,8 +1,8 @@
 package com.ms.historico.mocks;
 
-import com.fiap.ms.historicoDomain.gen.model.HistoricoAtualizarRequestDto;
-import com.fiap.ms.historicoDomain.gen.model.HistoricoRequestDto;
-import com.fiap.ms.historicoDomain.gen.model.HistoricoResponseDto;
+import com.ms.historico.entrypoints.controllers.dtos.HistoricoAtualizarRequestDto;
+import com.ms.historico.entrypoints.controllers.dtos.HistoricoResponseDto;
+import com.ms.historico.entrypoints.controllers.dtos.HistoricoRequestDto;
 import com.ms.historico.domain.model.HistoricoDomain;
 import com.ms.historico.infraestrutura.database.entities.HistoricoEntity;
 
@@ -37,8 +37,7 @@ public class HistoricoMocks {
         dto.setDiagnostico("Angina estável");
         dto.setPrescricao("Nitroglicerina 0.4mg, 1 comprimido sublingual");
         dto.setObservacoes("Recomenda-se acompanhamento nutricional e atividade física regular.");
-        dto.setData(OffsetDateTime.of(2025, 9, 20, 10, 30, 0, 0, ZoneOffset.of("-03:00")));
-
+        dto.setData(OffsetDateTime.of(2025, 9, 20, 10, 30, 0, 0, ZoneOffset.of("-03:00")).toString());
         return dto;
     }
 

@@ -1,0 +1,63 @@
+"""
+Representa um historico medico de um paciente
+"""
+type Historico{
+    idHistorico: ID,
+    idPaciente: ID,
+    data: String,
+    hospital: String,
+    medico: String,
+    especialidade: String
+    motivo: String,
+    diagnostico: String
+    prescricao: String
+    observacoes: String
+}
+
+"""
+Dados necessários para criar um novo registro no historico médico
+"""
+input HistoricoRequest{
+    idPaciente: ID,
+    hospital: String,
+    medico: String,
+    especialidade: String
+    motivo: String,
+    diagnostico: String
+    prescricao: String
+    observacoes: String
+}
+
+"""
+Dados necessários para atualizar um registro do historico médico
+"""
+input HistoricoUpdateRequest{
+    hospital: String,
+    medico: String,
+    especialidade: String
+    motivo: String,
+    diagnostico: String
+    prescricao: String
+    observacoes: String
+}
+
+input HistoricoFilter{
+    idHistorico: ID,
+    idPaciente: ID
+}
+
+"""
+Consultas disponíveis para historico
+"""
+type Query{
+    buscarHistoricos(filter: HistoricoFilter):[Historico]
+}
+
+"""
+Mutations disponíveis para historico
+"""
+type Mutation{
+    criarHistorico(request: HistoricoRequest!): Historico
+    atualizarHistorico(idHistorico: ID!, request: HistoricoUpdateRequest!): Historico
+    removerHistorico(idHistorico: ID!): Boolean
+}

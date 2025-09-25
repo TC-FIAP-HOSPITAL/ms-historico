@@ -4,5 +4,5 @@ import com.ms.historico.domain.model.HistoricoDomain;
 
 public interface InserirHistoricoUseCase {
 
-    void inserir(HistoricoDomain historicoDomain);
+    HistoricoDomain inserir(HistoricoDomain historicoDomain);
 }
