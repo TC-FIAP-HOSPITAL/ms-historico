@@ -1,27 +1,29 @@
 package com.ms.historico.entrypoints.controllers;
 
-import com.fiap.ms.historicoDomain.HistoricosApi;
-import com.fiap.ms.historicoDomain.gen.model.HistoricoAtualizarRequestDto;
-import com.fiap.ms.historicoDomain.gen.model.HistoricoRequestDto;
-import com.fiap.ms.historicoDomain.gen.model.HistoricoResponseDto;
 import com.ms.historico.application.usecase.AtualizarHistoricoUseCase;
 import com.ms.historico.application.usecase.BuscarHistoricoUseCase;
 import com.ms.historico.application.usecase.DeletarHistoricoUseCase;
 import com.ms.historico.application.usecase.InserirHistoricoUseCase;
 import com.ms.historico.domain.model.HistoricoDomain;
+import com.ms.historico.entrypoints.controllers.dtos.HistoricoAtualizarRequestDto;
+import com.ms.historico.entrypoints.controllers.dtos.HistoricoFilter;
+import com.ms.historico.entrypoints.controllers.dtos.HistoricoResponseDto;
+import com.ms.historico.entrypoints.controllers.dtos.HistoricoRequestDto;
 import com.ms.historico.entrypoints.controllers.presenter.HistoricoPresenter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
 @RequestMapping("/v1")
-public class HistoricoController implements HistoricosApi {
+public class HistoricoController {
 
     private final AtualizarHistoricoUseCase atualizarHistoricoUseCase;
     private final BuscarHistoricoUseCase buscarHistoricoUseCase;
@@ -38,30 +40,29 @@ public class HistoricoController implements HistoricosApi {
         this.inserirHistoricoUseCase = inserirHistoricoUseCase;
     }
 
-    @Override
-    public ResponseEntity<Void> _atualizarHistorico(Long idHistorico, HistoricoAtualizarRequestDto historicoDto) {
-        var domain = HistoricoPresenter.toDomain(historicoDto);
-        atualizarHistoricoUseCase.atualizar(idHistorico, domain);
-        return ResponseEntity.noContent().build();
+    @QueryMapping
+    public List<HistoricoResponseDto> buscarHistoricos(@Argument() HistoricoFilter filter) {
+        filter = Optional.ofNullable(filter).orElse(new HistoricoFilter());
+        List<HistoricoDomain> domains = buscarHistoricoUseCase.buscar(filter.getIdHistorico(), filter.getIdPaciente());
+        return HistoricoPresenter.toListDtos(domains);
     }
 
-    @Override
-    public ResponseEntity<List<HistoricoResponseDto>> _buscarHistoricos(Long idHistorico, Long idPaciente) {
-        List<HistoricoDomain> domains = buscarHistoricoUseCase.buscar(idHistorico, idPaciente);
-        List<HistoricoResponseDto> dtos = HistoricoPresenter.toListDtos(domains);
-        return ResponseEntity.ok(dtos);
+    @MutationMapping
+    public HistoricoResponseDto atualizarHistorico(@Argument() Long idHistorico, @Argument() HistoricoAtualizarRequestDto request) {
+        var domain = HistoricoPresenter.toDomain(request);
+        HistoricoDomain updatedDomain = atualizarHistoricoUseCase.atualizar(idHistorico, domain);
+        return HistoricoPresenter.toDomainDto(updatedDomain);
     }
 
-    @Override
-    public ResponseEntity<Void> _criarHistorico(HistoricoRequestDto historicoDto) {
-         var domain = HistoricoPresenter.toDomain(historicoDto);
-         inserirHistoricoUseCase.inserir(domain);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @MutationMapping
+    public HistoricoResponseDto criarHistorico(@Argument() HistoricoRequestDto request) {
+        var domain = HistoricoPresenter.toDomain(request);
+        HistoricoDomain savedDomain = inserirHistoricoUseCase.inserir(domain);
+        return HistoricoPresenter.toDomainDto(savedDomain);
     }
 
-    @Override
-    public ResponseEntity<Void> _removerHistorico(Long idHistorico) {
-        deletarHistoricoUseCase.deletar(idHistorico);
-        return ResponseEntity.noContent().build();
+    @MutationMapping
+    public Boolean removerHistorico(@Argument() Long idHistorico) {
+        return deletarHistoricoUseCase.deletar(idHistorico);
     }
 }

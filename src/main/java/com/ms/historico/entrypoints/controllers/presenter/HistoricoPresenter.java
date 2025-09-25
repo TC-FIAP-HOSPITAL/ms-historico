@@ -1,9 +1,9 @@
 package com.ms.historico.entrypoints.controllers.presenter;
 
-import com.fiap.ms.historicoDomain.gen.model.HistoricoAtualizarRequestDto;
-import com.fiap.ms.historicoDomain.gen.model.HistoricoRequestDto;
-import com.fiap.ms.historicoDomain.gen.model.HistoricoResponseDto;
 import com.ms.historico.domain.model.HistoricoDomain;
+import com.ms.historico.entrypoints.controllers.dtos.HistoricoAtualizarRequestDto;
+import com.ms.historico.entrypoints.controllers.dtos.HistoricoRequestDto;
+import com.ms.historico.entrypoints.controllers.dtos.HistoricoResponseDto;
 import com.ms.historico.entrypoints.controllers.mappers.HistoricoDtoMapper;
 
 import java.util.List;
@@ -20,5 +20,9 @@ public class HistoricoPresenter {
 
     public static HistoricoDomain toDomain(HistoricoAtualizarRequestDto dto) {
         return HistoricoDtoMapper.INSTANCE.toHistoricoAtualizarDomain(dto);
+    }
+
+    public static HistoricoResponseDto toDomainDto(HistoricoDomain domain) {
+        return HistoricoDtoMapper.INSTANCE.toHistoricoDto(domain);
     }
 }

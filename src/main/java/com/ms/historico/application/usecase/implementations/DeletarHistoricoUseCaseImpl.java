@@ -17,8 +17,9 @@ public class DeletarHistoricoUseCaseImpl implements DeletarHistoricoUseCase {
     }
 
     @Override
-    public void deletar(Long idHistorico) {
+    public boolean deletar(Long idHistorico) {
         HistoricoDomain domain = historicoDomainService.buscarHistoricoPorIdHistorico(idHistorico);
         historico.deletar(domain);
+        return true;
     }
 }
