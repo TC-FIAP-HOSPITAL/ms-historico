@@ -103,6 +103,10 @@
 			<version>11.1.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -146,40 +150,6 @@
 						</exclude>
 					</excludes>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.openapitools</groupId>
-				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>${openapi.generator.version}</version>
-				<executions>
-					<execution>
-						<id>generate-api</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/swagger-ui/swagger.yaml</inputSpec>
-							<generatorName>spring</generatorName>
-							<output>${project.build.directory}/generated-sources/swagger</output>
-							<apiPackage>com.fiap.ms.historicoDomain</apiPackage>
-							<generateApiTests>false</generateApiTests>
-							<generateModelTests>false</generateModelTests>
-							<modelNameSuffix>Dto</modelNameSuffix>
-							<configOptions>
-								<useSpringBoot3>true</useSpringBoot3>
-								<interfaceOnly>true</interfaceOnly>
-								<useTags>true</useTags>
-								<dateLibrary>java8</dateLibrary>
-								<basePackage>com.fiap.ms.historicoDomain.gen</basePackage>
-								<modelPackage>com.fiap.ms.historicoDomain.gen.model</modelPackage>
-								<configPackage>com.fiap.ms.historicoDomain.gen.config</configPackage>
-								<delegatePattern>true</delegatePattern>
-								<skipDefaultInterface>true</skipDefaultInterface>
-							</configOptions>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>
