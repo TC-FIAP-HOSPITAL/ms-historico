@@ -12,47 +12,43 @@ import java.time.ZoneOffset;
 public class HistoricoMocks {
 
     public static HistoricoRequestDto getHistoricoRequestDto() {
-        HistoricoRequestDto dto = new HistoricoRequestDto();
-
-        dto.setIdPaciente(1L);
-        dto.setHospital("Hospital do Coração");
-        dto.setMedico("Dr. Carlos Almeida");
-        dto.setEspecialidade("Cardiologia");
-        dto.setMotivo("Dor no peito e falta de ar");
-        dto.setDiagnostico("Angina estável");
-        dto.setPrescricao("Nitroglicerina 0.4mg, 1 comprimido sublingual");
-        dto.setObservacoes("Recomenda-se acompanhamento nutricional e atividade física regular.");
-
-        return dto;
+        return new HistoricoRequestDto(
+                1L,
+                "Hospital do Coração",
+                "Dr. Carlos Almeida",
+                "Cardiologia",
+                "Dor no peito e falta de ar",
+                "Angina estável",
+                "Nitroglicerina 0.4mg, 1 comprimido sublingual",
+                "Recomenda-se acompanhamento nutricional e atividade física regular."
+        );
     }
 
     public static HistoricoResponseDto getHistoricoResponseDto() {
-        HistoricoResponseDto dto = new HistoricoResponseDto();
-
-        dto.setIdPaciente(1L);
-        dto.setHospital("Hospital do Coração");
-        dto.setMedico("Dr. Carlos Almeida");
-        dto.setEspecialidade("Cardiologia");
-        dto.setMotivo("Dor no peito e falta de ar");
-        dto.setDiagnostico("Angina estável");
-        dto.setPrescricao("Nitroglicerina 0.4mg, 1 comprimido sublingual");
-        dto.setObservacoes("Recomenda-se acompanhamento nutricional e atividade física regular.");
-        dto.setData(OffsetDateTime.of(2025, 9, 20, 10, 30, 0, 0, ZoneOffset.of("-03:00")).toString());
-        return dto;
+        return new HistoricoResponseDto(
+                1L,
+                1L, // se houver idHistorico
+                OffsetDateTime.of(2025, 9, 20, 10, 30, 0, 0, ZoneOffset.of("-03:00")).toString(),
+                "Hospital do Coração",
+                "Dr. Carlos Almeida",
+                "Cardiologia",
+                "Dor no peito e falta de ar",
+                "Angina estável",
+                "Nitroglicerina 0.4mg, 1 comprimido sublingual",
+                "Recomenda-se acompanhamento nutricional e atividade física regular."
+        );
     }
 
     public static HistoricoAtualizarRequestDto getHistoricoAtualizarRequestDto() {
-        HistoricoAtualizarRequestDto dto = new HistoricoAtualizarRequestDto();
-
-        dto.setHospital("Hospital do Coração");
-        dto.setMedico("Dr. Carlos Almeida");
-        dto.setEspecialidade("Cardiologia");
-        dto.setMotivo("Dor no peito e falta de ar");
-        dto.setDiagnostico("Angina estável");
-        dto.setPrescricao("Nitroglicerina 0.4mg, 1 comprimido sublingual");
-        dto.setObservacoes("Recomenda-se acompanhamento nutricional e atividade física regular.");
-
-        return dto;
+        return new HistoricoAtualizarRequestDto(
+                "Hospital do Coração",
+                "Dr. Carlos Almeida",
+                "Cardiologia",
+                "Dor no peito e falta de ar",
+                "Angina estável",
+                "Nitroglicerina 0.4mg, 1 comprimido sublingual",
+                "Recomenda-se acompanhamento nutricional e atividade física regular."
+        );
     }
 
     public static HistoricoDomain getHistoricoDomain() {

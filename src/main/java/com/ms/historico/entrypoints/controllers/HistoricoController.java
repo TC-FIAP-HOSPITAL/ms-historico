@@ -42,8 +42,8 @@ public class HistoricoController {
 
     @QueryMapping
     public List<HistoricoResponseDto> buscarHistoricos(@Argument() HistoricoFilter filter) {
-        filter = Optional.ofNullable(filter).orElse(new HistoricoFilter());
-        List<HistoricoDomain> domains = buscarHistoricoUseCase.buscar(filter.getIdHistorico(), filter.getIdPaciente());
+        filter = Optional.ofNullable(filter).orElse(new HistoricoFilter(null, null));
+        List<HistoricoDomain> domains = buscarHistoricoUseCase.buscar(filter.idHistorico(), filter.idPaciente());
         return HistoricoPresenter.toListDtos(domains);
     }
 
