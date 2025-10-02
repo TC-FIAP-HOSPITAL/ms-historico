@@ -2,12 +2,10 @@ package com.ms.historico.entrypoints.controllers.dtos;
 
 public record HistoricoRequestDto (
      Long idPaciente,
-     String hospital,
-     String medico,
+     Long idMedico,
+     String data,
      String especialidade,
      String motivo,
-     String diagnostico,
-     String prescricao,
      String observacoes
 ){}
 

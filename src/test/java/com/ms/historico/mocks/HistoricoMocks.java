@@ -7,47 +7,37 @@ import com.ms.historico.domain.model.HistoricoDomain;
 import com.ms.historico.infraestrutura.database.entities.HistoricoEntity;
 
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 
 public class HistoricoMocks {
 
     public static HistoricoRequestDto getHistoricoRequestDto() {
         return new HistoricoRequestDto(
                 1L,
-                "Hospital do Coração",
-                "Dr. Carlos Almeida",
-                "Cardiologia",
+                1L,
+                "CARDIOLOGIA",
                 "Dor no peito e falta de ar",
-                "Angina estável",
-                "Nitroglicerina 0.4mg, 1 comprimido sublingual",
-                "Recomenda-se acompanhamento nutricional e atividade física regular."
+                "Familia do paciente tem historico de infarto"
         );
     }
 
     public static HistoricoResponseDto getHistoricoResponseDto() {
         return new HistoricoResponseDto(
                 1L,
-                1L, // se houver idHistorico
-                OffsetDateTime.of(2025, 9, 20, 10, 30, 0, 0, ZoneOffset.of("-03:00")).toString(),
-                "Hospital do Coração",
-                "Dr. Carlos Almeida",
-                "Cardiologia",
+                1L,
+                1L,
+                "2025-09-20T10:30:00-03:00",
+                "CARDIOLOGIA",
                 "Dor no peito e falta de ar",
-                "Angina estável",
-                "Nitroglicerina 0.4mg, 1 comprimido sublingual",
-                "Recomenda-se acompanhamento nutricional e atividade física regular."
+                "Familia do paciente tem historico de infarto"
         );
     }
 
     public static HistoricoAtualizarRequestDto getHistoricoAtualizarRequestDto() {
         return new HistoricoAtualizarRequestDto(
-                "Hospital do Coração",
-                "Dr. Carlos Almeida",
-                "Cardiologia",
+                1L,
+                "CARDIOLOGIA",
                 "Dor no peito e falta de ar",
-                "Angina estável",
-                "Nitroglicerina 0.4mg, 1 comprimido sublingual",
-                "Recomenda-se acompanhamento nutricional e atividade física regular."
+                "Familia do paciente tem historico de infarto"
         );
     }
 
@@ -56,12 +46,9 @@ public class HistoricoMocks {
 
         domain.setIdHistorico(101L);
         domain.setIdPaciente(1L);
-        domain.setHospital("Hospital do Coração");
-        domain.setMedico("Dr. Carlos Almeida");
+        domain.setIdMedico(1L);
         domain.setEspecialidade("Cardiologia");
         domain.setMotivo("Dor no peito e falta de ar");
-        domain.setDiagnostico("Angina estável");
-        domain.setPrescricao("Nitroglicerina 0.4mg, 1 comprimido sublingual");
         domain.setObservacoes("Recomenda-se acompanhamento nutricional e atividade física regular.");
         domain.setData(OffsetDateTime.parse("2025-09-20T10:30:00-03:00"));
 
@@ -73,12 +60,9 @@ public class HistoricoMocks {
 
         entity.setIdHistorico(101L);
         entity.setIdPaciente(1L);
-        entity.setHospital("Hospital do Coração");
-        entity.setMedico("Dr. Carlos Almeida");
+        entity.setIdMedico(1L);
         entity.setEspecialidade("Cardiologia");
         entity.setMotivo("Dor no peito e falta de ar");
-        entity.setDiagnostico("Angina estável");
-        entity.setPrescricao("Nitroglicerina 0.4mg, 1 comprimido sublingual");
         entity.setObservacoes("Recomenda-se acompanhamento nutricional e atividade física regular.");
         entity.setData(OffsetDateTime.parse("2025-09-20T10:30:00-03:00"));
 

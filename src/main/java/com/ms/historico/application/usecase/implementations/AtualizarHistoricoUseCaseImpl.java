@@ -19,15 +19,17 @@ public class AtualizarHistoricoUseCaseImpl implements AtualizarHistoricoUseCase 
 
     @Override
     public HistoricoDomain atualizar(Long idHistorico, HistoricoDomain historicoDomain) {
-        ValidarCamposObrigatoriosRule.validarCamposObrigatorios(historicoDomain.getHospital(), historicoDomain.getMedico(), historicoDomain.getEspecialidade(),
-                historicoDomain.getMotivo(), historicoDomain.getDiagnostico(), historicoDomain.getPrescricao(), historicoDomain.getDiagnostico());
+
+        ValidarCamposObrigatoriosRule.validarCamposObrigatorios(
+                historicoDomain.getIdPaciente(),
+                historicoDomain.getIdMedico(),
+                historicoDomain.getData(),
+                historicoDomain.getEspecialidade(),
+                historicoDomain.getMotivo());
 
         HistoricoDomain domain = historicoDomainService.buscarHistoricoPorIdHistorico(idHistorico);
 
-        domain.setDiagnostico(historicoDomain.getDiagnostico());
-        domain.setHospital(historicoDomain.getHospital());
-        domain.setMedico(historicoDomain.getMedico());
-        domain.setPrescricao(historicoDomain.getPrescricao());
+        domain.setIdMedico(historicoDomain.getIdMedico());
         domain.setEspecialidade(historicoDomain.getEspecialidade());
         domain.setMotivo(historicoDomain.getMotivo());
         domain.setObservacoes(historicoDomain.getObservacoes());

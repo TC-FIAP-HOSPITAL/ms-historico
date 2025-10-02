@@ -8,34 +8,25 @@ public class HistoricoDomain {
 
     private Long idPaciente;
 
+    private Long idMedico;
+
     private OffsetDateTime data;
-
-    private String hospital;
-
-    private String medico;
 
     private String especialidade;
 
     private String motivo;
 
-    private String diagnostico;
-
-    private String prescricao;
-
     private String observacoes;
 
     public HistoricoDomain() {}
 
-    public HistoricoDomain(Long idHistorico, Long idPaciente, OffsetDateTime data, String hospital, String medico, String especialidade, String motivo, String diagnostico, String prescricao, String observacoes) {
+    public HistoricoDomain(Long idHistorico, Long idPaciente, Long idMedico, OffsetDateTime data, String especialidade, String motivo, String observacoes) {
         this.idHistorico = idHistorico;
         this.idPaciente = idPaciente;
+        this.idMedico = idMedico;
         this.data = data;
-        this.hospital = hospital;
-        this.medico = medico;
         this.especialidade = especialidade;
         this.motivo = motivo;
-        this.diagnostico = diagnostico;
-        this.prescricao = prescricao;
         this.observacoes = observacoes;
     }
 
@@ -55,28 +46,20 @@ public class HistoricoDomain {
         this.idPaciente = idPaciente;
     }
 
+    public Long getIdMedico() {
+        return idMedico;
+    }
+
+    public void setIdMedico(Long idMedico) {
+        this.idMedico = idMedico;
+    }
+
     public OffsetDateTime getData() {
         return data;
     }
 
     public void setData(OffsetDateTime data) {
         this.data = data;
-    }
-
-    public String getHospital() {
-        return hospital;
-    }
-
-    public void setHospital(String hospital) {
-        this.hospital = hospital;
-    }
-
-    public String getMedico() {
-        return medico;
-    }
-
-    public void setMedico(String medico) {
-        this.medico = medico;
     }
 
     public String getEspecialidade() {
@@ -93,22 +76,6 @@ public class HistoricoDomain {
 
     public void setMotivo(String motivo) {
         this.motivo = motivo;
-    }
-
-    public String getDiagnostico() {
-        return diagnostico;
-    }
-
-    public void setDiagnostico(String diagnostico) {
-        this.diagnostico = diagnostico;
-    }
-
-    public String getPrescricao() {
-        return prescricao;
-    }
-
-    public void setPrescricao(String prescricao) {
-        this.prescricao = prescricao;
     }
 
     public String getObservacoes() {
