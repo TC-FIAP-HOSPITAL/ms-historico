@@ -27,19 +27,14 @@ public class HistoricoEntity {
     @Column(name = "id_paciente")
     private Long idPaciente;
 
+    @Column(name = "id_medico")
+    private Long idMedico;
+
     private OffsetDateTime data;
-
-    private String hospital;
-
-    private String medico;
 
     private String especialidade;
 
     private String motivo;
-
-    private String diagnostico;
-
-    private String prescricao;
 
     private String observacoes;
 }

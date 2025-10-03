@@ -21,13 +21,10 @@ public interface HistoricoDtoMapper {
 
     HistoricoResponseDto toHistoricoDto(HistoricoDomain historicoDomain);
 
-    @Mapping(target = "data", ignore = true)
     @Mapping(target = "idHistorico", ignore = true)
     HistoricoDomain toHistoricoDomain(HistoricoRequestDto historicoDto);
 
-    @Mapping(target = "data", ignore = true)
     @Mapping(target = "idHistorico", ignore = true)
-    @Mapping(target = "idPaciente", ignore = true)
     HistoricoDomain toHistoricoAtualizarDomain(HistoricoAtualizarRequestDto historicoDto);
 
     // ======== MÉTODOS PARA CONVERSÃO OFFSETDATETIME ↔ STRING ========
