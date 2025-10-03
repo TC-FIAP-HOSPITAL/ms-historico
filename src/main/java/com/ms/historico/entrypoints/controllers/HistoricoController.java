@@ -1,5 +1,15 @@
 package com.ms.historico.entrypoints.controllers;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ms.historico.application.usecase.AtualizarHistoricoUseCase;
 import com.ms.historico.application.usecase.BuscarHistoricoUseCase;
 import com.ms.historico.application.usecase.DeletarHistoricoUseCase;
@@ -7,18 +17,13 @@ import com.ms.historico.application.usecase.InserirHistoricoUseCase;
 import com.ms.historico.domain.model.HistoricoDomain;
 import com.ms.historico.entrypoints.controllers.dtos.HistoricoAtualizarRequestDto;
 import com.ms.historico.entrypoints.controllers.dtos.HistoricoFilter;
-import com.ms.historico.entrypoints.controllers.dtos.HistoricoResponseDto;
 import com.ms.historico.entrypoints.controllers.dtos.HistoricoRequestDto;
+import com.ms.historico.entrypoints.controllers.dtos.HistoricoResponseDto;
 import com.ms.historico.entrypoints.controllers.presenter.HistoricoPresenter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ms.historico.infraestrutura.config.security.Role;
+import com.ms.historico.infraestrutura.config.security.SecurityUtil;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -29,26 +34,51 @@ public class HistoricoController {
     private final BuscarHistoricoUseCase buscarHistoricoUseCase;
     private final DeletarHistoricoUseCase deletarHistoricoUseCase;
     private final InserirHistoricoUseCase inserirHistoricoUseCase;
+    private final SecurityUtil securityUtil;
 
     public HistoricoController(AtualizarHistoricoUseCase atualizarHistoricoUseCase,
-                               BuscarHistoricoUseCase buscarHistoricoUseCase,
-                               DeletarHistoricoUseCase deletarHistoricoUseCase,
-                               InserirHistoricoUseCase inserirHistoricoUseCase) {
+            BuscarHistoricoUseCase buscarHistoricoUseCase,
+            DeletarHistoricoUseCase deletarHistoricoUseCase,
+            InserirHistoricoUseCase inserirHistoricoUseCase,
+            SecurityUtil securityUtil) {
         this.atualizarHistoricoUseCase = atualizarHistoricoUseCase;
         this.buscarHistoricoUseCase = buscarHistoricoUseCase;
         this.deletarHistoricoUseCase = deletarHistoricoUseCase;
         this.inserirHistoricoUseCase = inserirHistoricoUseCase;
+        this.securityUtil = securityUtil;
     }
 
     @QueryMapping
     public List<HistoricoResponseDto> buscarHistoricos(@Argument() HistoricoFilter filter) {
         filter = Optional.ofNullable(filter).orElse(new HistoricoFilter(null, null));
+
+        Role role = securityUtil.getRole();
+        boolean isAdmin = securityUtil.isAdmin();
+
+        if (Role.PACIENTE.equals(role) && !isAdmin) {
+            Long currentUserId = securityUtil.getUserId();
+            if (currentUserId == null) {
+                throw new AccessDeniedException("Access denied: unable to determine authenticated patient");
+            }
+
+            Long requestedIdPaciente = filter.idPaciente();
+            if (requestedIdPaciente != null && !requestedIdPaciente.equals(currentUserId)) {
+                throw new AccessDeniedException("Access denied: patients can only view their own history");
+            }
+
+            filter = new HistoricoFilter(filter.idHistorico(), currentUserId);
+        } else if (!isAdmin && !Role.MEDICO.equals(role) && !Role.ENFERMEIRO.equals(role)) {
+            throw new AccessDeniedException("Access denied: insufficient permissions to view history");
+        }
+
         List<HistoricoDomain> domains = buscarHistoricoUseCase.buscar(filter.idHistorico(), filter.idPaciente());
         return HistoricoPresenter.toListDtos(domains);
     }
 
     @MutationMapping
-    public HistoricoResponseDto atualizarHistorico(@Argument() Long idHistorico, @Argument() HistoricoAtualizarRequestDto request) {
+    public HistoricoResponseDto atualizarHistorico(@Argument() Long idHistorico,
+            @Argument() HistoricoAtualizarRequestDto request) {
+        ensureCanEdit();
         var domain = HistoricoPresenter.toDomain(request);
         HistoricoDomain updatedDomain = atualizarHistoricoUseCase.atualizar(idHistorico, domain);
         return HistoricoPresenter.toDomainDto(updatedDomain);
@@ -56,6 +86,7 @@ public class HistoricoController {
 
     @MutationMapping
     public HistoricoResponseDto criarHistorico(@Argument() HistoricoRequestDto request) {
+        ensureAdmin();
         var domain = HistoricoPresenter.toDomain(request);
         HistoricoDomain savedDomain = inserirHistoricoUseCase.inserir(domain);
         return HistoricoPresenter.toDomainDto(savedDomain);
@@ -63,6 +94,24 @@ public class HistoricoController {
 
     @MutationMapping
     public Boolean removerHistorico(@Argument() Long idHistorico) {
+        ensureAdmin();
         return deletarHistoricoUseCase.deletar(idHistorico);
+    }
+
+    private void ensureCanEdit() {
+        if (securityUtil.isAdmin()) {
+            return;
+        }
+
+        Role role = securityUtil.getRole();
+        if (!Role.MEDICO.equals(role)) {
+            throw new AccessDeniedException("Access denied: only administrators and doctors can edit the history");
+        }
+    }
+
+    private void ensureAdmin() {
+        if (!securityUtil.isAdmin()) {
+            throw new AccessDeniedException("Access denied: only administrators can perform this action");
+        }
     }
 }

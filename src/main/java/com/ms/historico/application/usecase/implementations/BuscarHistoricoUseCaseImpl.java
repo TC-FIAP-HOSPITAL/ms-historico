@@ -10,8 +10,8 @@ public class BuscarHistoricoUseCaseImpl implements BuscarHistoricoUseCase {
 
     private final Historico historico;
 
-    public BuscarHistoricoUseCaseImpl(Historico historico) {
-        this.historico = historico;
+  public BuscarHistoricoUseCaseImpl(Historico historico) {
+    this.historico = historico;
     }
 
     @Override
