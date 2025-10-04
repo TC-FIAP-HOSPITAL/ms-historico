@@ -14,6 +14,7 @@ Microserviço responsável por gerenciar o histórico clínico de pacientes. Ele
 - [Segurança](#segurança)
 - [Banco de dados](#banco-de-dados)
 - [Testes e qualidade](#testes-e-qualidade)
+- [Cobertura e relatórios](#cobertura-e-relatórios)
 - [Estrutura de pastas](#estrutura-de-pastas)
 
 ## Arquitetura e responsabilidades
@@ -231,11 +232,25 @@ As validações de obrigatoriedade são centralizadas em `ValidarCamposObrigator
 ./mvnw test
 ```
 
-Há testes unitários para os principais use cases, regras de domínio e adaptadores (ex.: `HistoricoDomainServiceImplTest`, `HistoricoImplTest`, `ValidarCamposObrigatoriosRuleTest`).
+A suíte cobre use cases, regras de domínio, adaptadores e agora também utilitários de segurança, filtros JWT e configurações de RabbitMQ:
 
-### Cobertura
+- `SecurityUtilTest`, `JwtAuthenticationFilterTest`, `SecurityExceptionHandlerConfigTest`
+- `RabbitMQConfigTest`
+- `HistoricoDomainServiceConfigTest`
+- `HistoricoImplTest`, `HistoricoSpecificationTest`, `MessageConsumerImplTest`
+- Regras de domínio (`ValidarCamposObrigatoriosRuleTest`) e serviços (`HistoricoDomainServiceImplTest`)
 
-O plugin JaCoCo está configurado; o relatório é gerado em `target/site/jacoco` após `mvn verify`.
+## Cobertura e relatórios
+
+- A cobertura de instruções está atualmente em **~91%** (75% de branches) medida com JaCoCo após `./mvnw test`.
+- Os relatórios HTML são gerados automaticamente em `target/site/jacoco`.
+- Para facilitar o compartilhamento, o workflow local cria um bundle em `reports/jacoco.zip`; basta abrir `index.html` dentro do zip para navegar pelos pacotes.
+- Para gerar novamente:
+
+```bash
+./mvnw test jacoco:report
+zip -r reports/jacoco.zip target/site/jacoco
+```
 
 ## Estrutura de pastas
 
