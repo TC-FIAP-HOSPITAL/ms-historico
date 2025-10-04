@@ -14,6 +14,7 @@ public class HistoricoMocks {
         return new HistoricoRequestDto(
                 1L,
                 1L,
+                "DATA",
                 "CARDIOLOGIA",
                 "Dor no peito e falta de ar",
                 "Familia do paciente tem historico de infarto"
@@ -35,7 +36,9 @@ public class HistoricoMocks {
     public static HistoricoAtualizarRequestDto getHistoricoAtualizarRequestDto() {
         return new HistoricoAtualizarRequestDto(
                 1L,
+                1L,
                 "CARDIOLOGIA",
+                "DATA",
                 "Dor no peito e falta de ar",
                 "Familia do paciente tem historico de infarto"
         );

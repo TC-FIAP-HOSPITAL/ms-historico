@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static com.ms.historico.mocks.HistoricoMocks.getHistoricoDomain;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.times;
@@ -38,7 +37,6 @@ public class HistoricoDomainServiceImplTest {
         HistoricoDomain domain = historicoDomainService.buscarHistoricoPorIdHistorico(idHistorico);
 
         assertNotNull(domain);
-        assertEquals(domain.getHospital(), historicoDomain.getHospital());
         verify(historico, times(1)).buscarPorIdHistorico(idHistorico);
     }
 

@@ -50,7 +50,7 @@ public class HistoricoController {
 
     @QueryMapping
     public List<HistoricoResponseDto> buscarHistoricos(@Argument() HistoricoFilter filter) {
-        filter = Optional.ofNullable(filter).orElse(new HistoricoFilter(null, null));
+        filter = Optional.ofNullable(filter).orElse(new HistoricoFilter(null, null, null, null));
 
         Role role = securityUtil.getRole();
         boolean isAdmin = securityUtil.isAdmin();
@@ -66,7 +66,7 @@ public class HistoricoController {
                 throw new AccessDeniedException("Access denied: patients can only view their own history");
             }
 
-            filter = new HistoricoFilter(filter.idHistorico(), currentUserId);
+            filter = new HistoricoFilter(filter.idHistorico(), currentUserId, null, null);
         } else if (!isAdmin && !Role.MEDICO.equals(role) && !Role.ENFERMEIRO.equals(role)) {
             throw new AccessDeniedException("Access denied: insufficient permissions to view history");
         }
