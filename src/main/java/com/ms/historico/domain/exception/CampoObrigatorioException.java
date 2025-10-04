@@ -5,7 +5,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 public class CampoObrigatorioException extends ResponseStatusException {
 
-    public CampoObrigatorioException(String nomeCampo) {
-        super(HttpStatus.BAD_REQUEST, "Campo " + nomeCampo + " não foi preenchido!");
+    public CampoObrigatorioException(String mensagem) {
+        super(HttpStatus.BAD_REQUEST, mensagem);
     }
 }
