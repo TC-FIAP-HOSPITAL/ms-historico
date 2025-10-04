@@ -49,26 +49,29 @@ public class HistoricoController {
     }
 
     @QueryMapping
-    public List<HistoricoResponseDto> buscarHistoricos(@Argument() HistoricoFilter filter) {
+    public List<HistoricoResponseDto> buscarHistoricos(@Argument HistoricoFilter filter) {
         filter = Optional.ofNullable(filter).orElse(new HistoricoFilter(null, null, null, null));
 
         Role role = securityUtil.getRole();
         boolean isAdmin = securityUtil.isAdmin();
 
-        if (Role.PACIENTE.equals(role) && !isAdmin) {
-            Long currentUserId = securityUtil.getUserId();
-            if (currentUserId == null) {
-                throw new AccessDeniedException("Access denied: unable to determine authenticated patient");
-            }
+        // Permite apenas ADMIN, MÉDICO e PACIENTE
+        if (!(Role.PACIENTE.equals(role) || Role.MEDICO.equals(role) || isAdmin)) {
+            throw new AccessDeniedException("Access denied: insufficient permissions to view history");
+        }
 
+        Long currentUserId = securityUtil.getUserId();
+        if (currentUserId == null) {
+            throw new AccessDeniedException("Access denied: unable to determine authenticated user");
+        }
+
+        // Se for PACIENTE, só pode ver o próprio histórico
+        if (Role.PACIENTE.equals(role)) {
             Long requestedIdPaciente = filter.idPaciente();
             if (requestedIdPaciente != null && !requestedIdPaciente.equals(currentUserId)) {
                 throw new AccessDeniedException("Access denied: patients can only view their own history");
             }
-
             filter = new HistoricoFilter(filter.idHistorico(), currentUserId, null, null);
-        } else if (!isAdmin && !Role.MEDICO.equals(role) && !Role.ENFERMEIRO.equals(role)) {
-            throw new AccessDeniedException("Access denied: insufficient permissions to view history");
         }
 
         List<HistoricoDomain> domains = buscarHistoricoUseCase.buscar(filter.idHistorico(), filter.idPaciente());
@@ -86,7 +89,7 @@ public class HistoricoController {
 
     @MutationMapping
     public HistoricoResponseDto criarHistorico(@Argument() HistoricoRequestDto request) {
-        ensureAdmin();
+        ensureCanEdit();
         var domain = HistoricoPresenter.toDomain(request);
         HistoricoDomain savedDomain = inserirHistoricoUseCase.inserir(domain);
         return HistoricoPresenter.toDomainDto(savedDomain);
@@ -94,24 +97,24 @@ public class HistoricoController {
 
     @MutationMapping
     public Boolean removerHistorico(@Argument() Long idHistorico) {
-        ensureAdmin();
+        ensureCanEdit();
         return deletarHistoricoUseCase.deletar(idHistorico);
     }
 
     private void ensureCanEdit() {
-        if (securityUtil.isAdmin()) {
-            return;
-        }
-
         Role role = securityUtil.getRole();
-        if (!Role.MEDICO.equals(role)) {
-            throw new AccessDeniedException("Access denied: only administrators and doctors can edit the history");
+        boolean isAdmin = securityUtil.isAdmin();
+
+        if (!(Role.MEDICO.equals(role) || isAdmin)) {
+            throw new AccessDeniedException("Access denied: only admins and doctors can modify history");
         }
     }
 
     private void ensureAdmin() {
-        if (!securityUtil.isAdmin()) {
-            throw new AccessDeniedException("Access denied: only administrators can perform this action");
+        boolean isAdmin = securityUtil.isAdmin();
+
+        if (!isAdmin) {
+            throw new AccessDeniedException("Access denied: only admins can perform this action");
         }
     }
 }
