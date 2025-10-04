@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">ms-historico</a> &gt; <a href="index.source.html" class="el_package">com.ms.historico.infraestrutura.config.security</a> &gt; <span class="el_source">SecurityUtil.java</span></div><h1>SecurityUtil.java</h1><pre class="source lang-java linenums">package com.ms.historico.infraestrutura.config.security;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+
+@Component
+<span class="fc" id="L9">public class SecurityUtil {</span>
+    public Authentication getAuthentication() {
+<span class="fc" id="L11">        return SecurityContextHolder.getContext().getAuthentication();</span>
+    }
+
+    public String getCurrentUsername() {
+<span class="fc" id="L15">        Authentication auth = getAuthentication();</span>
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        return auth != null ? auth.getName() : null;</span>
+    }
+
+    public String getJwtToken() {
+<span class="fc" id="L20">        Authentication auth = getAuthentication();</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        return auth != null ? auth.getCredentials().toString() : null;</span>
+    }
+
+    public Boolean isAdmin() {
+<span class="fc" id="L25">        Authentication auth = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="fc" id="L26">        return auth.getAuthorities().stream()</span>
+<span class="fc" id="L27">                .anyMatch(a -&gt; a.getAuthority().equals(Role.ADMIN.toAuthority()));</span>
+    }
+
+    public Role getRole() {
+<span class="fc" id="L31">      Authentication auth = SecurityContextHolder.getContext().getAuthentication();</span>
+
+<span class="fc bfc" id="L33" title="All 4 branches covered.">      if (auth == null || auth.getAuthorities() == null) {</span>
+<span class="fc" id="L34">        return Role.PACIENTE;</span>
+      }
+
+<span class="fc" id="L37">      return auth.getAuthorities()</span>
+<span class="fc" id="L38">          .stream()</span>
+<span class="fc" id="L39">          .map(GrantedAuthority::getAuthority) // e.g. &quot;ROLE_ADMIN&quot;</span>
+<span class="fc" id="L40">          .map(Role::fromAuthority)            // -&gt; Role.ADMIN</span>
+<span class="fc" id="L41">          .findFirst().orElse(Role.PACIENTE);</span>
+    }
+
+    public Long getUserId() {
+<span class="fc" id="L45">        Authentication auth = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="pc bpc" id="L46" title="1 of 4 branches missed.">        if (auth == null || !auth.isAuthenticated()) {</span>
+<span class="fc" id="L47">            return null;</span>
+        }
+<span class="fc" id="L49">        Object principal = auth.getPrincipal();</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (principal instanceof MyUserDetails myUserDetails) {</span>
+<span class="fc" id="L51">            return myUserDetails.getUserId();</span>
+        }
+<span class="nc" id="L53">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

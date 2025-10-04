@@ -117,10 +117,6 @@
         </dependency>
 
         <!-- Validation -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
 
         <!-- JJWT (JSON Web Token) -->
         <dependency>
@@ -211,6 +207,7 @@
 								<exclude>**/historicoDomain/**</exclude>
 								<exclude>**/MsHistoricoApplication.class/**</exclude>
 								<exclude>**/config/usecase/**</exclude>
+						<exclude>com/ms/historico/infraestrutura/config/security/SecurityConfig*</exclude>
 							</excludes>
 						</configuration>
 					</execution>
@@ -228,6 +225,7 @@
 						<exclude>**/historicoDomain/**</exclude>
 						<exclude>**/MsHistoricoApplication.class/**</exclude>
 						<exclude>**/config/usecase/**</exclude>
+					<exclude>com/ms/historico/infraestrutura/config/security/SecurityConfig*</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
