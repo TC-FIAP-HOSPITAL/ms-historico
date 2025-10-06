@@ -1,15 +1,5 @@
 package com.ms.historico.entrypoints.controllers;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ms.historico.application.usecase.AtualizarHistoricoUseCase;
 import com.ms.historico.application.usecase.BuscarHistoricoUseCase;
 import com.ms.historico.application.usecase.DeletarHistoricoUseCase;
@@ -22,8 +12,16 @@ import com.ms.historico.entrypoints.controllers.dtos.HistoricoResponseDto;
 import com.ms.historico.entrypoints.controllers.presenter.HistoricoPresenter;
 import com.ms.historico.infraestrutura.config.security.Role;
 import com.ms.historico.infraestrutura.config.security.SecurityUtil;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -55,23 +53,13 @@ public class HistoricoController {
         Role role = securityUtil.getRole();
         boolean isAdmin = securityUtil.isAdmin();
 
-        // Permite apenas ADMIN, MÉDICO e PACIENTE
-        if (!(Role.PACIENTE.equals(role) || Role.MEDICO.equals(role) || isAdmin)) {
+        if (!(Role.MEDICO.equals(role) || isAdmin)) {
             throw new AccessDeniedException("Access denied: insufficient permissions to view history");
         }
 
         Long currentUserId = securityUtil.getUserId();
         if (currentUserId == null) {
             throw new AccessDeniedException("Access denied: unable to determine authenticated user");
-        }
-
-        // Se for PACIENTE, só pode ver o próprio histórico
-        if (Role.PACIENTE.equals(role)) {
-            Long requestedIdPaciente = filter.idPaciente();
-            if (requestedIdPaciente != null && !requestedIdPaciente.equals(currentUserId)) {
-                throw new AccessDeniedException("Access denied: patients can only view their own history");
-            }
-            filter = new HistoricoFilter(filter.idHistorico(), currentUserId, null, null);
         }
 
         List<HistoricoDomain> domains = buscarHistoricoUseCase.buscar(filter.idHistorico(), filter.idPaciente());

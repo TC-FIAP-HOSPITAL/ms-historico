@@ -64,20 +64,6 @@ class HistoricoControllerTest {
     }
 
     @Test
-    void testBuscarHistoricos_Paciente_ProprioHistorico() {
-        when(securityUtil.getRole()).thenReturn(Role.PACIENTE);
-        when(securityUtil.getUserId()).thenReturn(10L);
-        when(securityUtil.isAdmin()).thenReturn(false);
-        when(buscarUseCase.buscar(null, 10L)).thenReturn(Collections.emptyList());
-
-        HistoricoFilter filter = new HistoricoFilter(null, 10L, null, null);
-        List<HistoricoResponseDto> result = controller.buscarHistoricos(filter);
-
-        assertNotNull(result);
-        verify(buscarUseCase).buscar(null, 10L);
-    }
-
-    @Test
     void testBuscarHistoricos_Paciente_TentandoOutroHistorico() {
         when(securityUtil.getRole()).thenReturn(Role.PACIENTE);
         when(securityUtil.getUserId()).thenReturn(10L);
